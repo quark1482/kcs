@@ -1,0 +1,13 @@
+{
+  "actorSpecification": 1,
+  "name": "KCS",
+  "title": "KeyChain scraper",
+  "description": "Apify actor for flipkey.com",
+  "version": "1.0.0",
+  "input": "./input-schema.json",
+  "readme": "../README.md",
+  "dockerfile": "./Dockerfile",
+  "environmentVariables": {
+    "ARCGIS_API_KEY": "@ArcGIS"
+  }
+}

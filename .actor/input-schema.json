@@ -1,0 +1,31 @@
+{
+    "title": "Input schema for the FlipKey scraper actor.",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "location": {
+            "title": "Location",
+            "type": "string",
+            "description": "A pair of '<city>, <state>' values",
+            "editor": "textfield"
+        },
+        "radius": {
+            "title": "Radius",
+            "type": "integer",
+            "description": "Radius to search within, in miles",
+            "default": 10,
+            "editor": "number",
+            "unit": "mi"
+        },
+        "verbose": {
+            "title": "Verbose mode",
+            "type": "boolean",
+            "description": "Sets the verbose mode on/off",
+            "default": false,
+            "editor": "checkbox"
+        }
+    },
+    "required": [
+        "location"
+    ]
+}

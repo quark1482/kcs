@@ -1,0 +1,30 @@
+{
+  "name": "kcs",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Apify actor for flipkey.com",
+  "dependencies": {
+    "@esri/arcgis-rest-auth": "^3.6.0",
+    "@esri/arcgis-rest-geocoding": "^3.6.0",
+    "@esri/arcgis-rest-request": "^3.6.0",
+    "apify": "^3.0.0",
+    "cheerio": "^1.0.0-rc.12",
+    "html-entities": "^2.3.3",
+    "https-proxy-agent": "^5.0.1",
+    "isomorphic-form-data": "^2.0.0",
+    "node-fetch": "^3.3.0",
+    "sanitize-html": "^2.10.0"
+  },
+  "scripts": {
+    "start": "node src/flipkey.js"
+  },
+  "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/quark1482/kcs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/quark1482/kcs/issues"
+  },
+  "homepage": "https://github.com/quark1482/kcs#readme"
+}
