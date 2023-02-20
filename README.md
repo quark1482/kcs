@@ -30,15 +30,15 @@ Installation
 <br>Enable it, in case you want to see the progress/status of the actor.
 6. *[optional]* Hit the 'Code' tab and add an environment variable to store your ArcGIS REST API key:
     - Name: `ARCGIS_API_KEY`
-    - Value: [Get it here](https://github.com/quark1482/kcs/edit/main/README.md#optional-using-the-arcgis-location-services).
+    - Value: [Get it here](https://github.com/quark1482/kcs#optional-using-the-arcgis-location-services).
     - Secret: YES
 7. Hit 'Start'.
-8. The [results](https://github.com/quark1482/kcs/edit/main/README.md#results) will be found in the 'Last run' tab. Once there, hit the 'Dataset' tab.
+8. The [results](https://github.com/quark1482/kcs#results) will be found in the 'Last run' tab. Once there, hit the 'Dataset' tab.
 
 ### Running the actor locally:
 
 1. Follow the steps to install the Apify CLI [here](https://github.com/apify/apify-cli#readme).
-2. *[optional]* If you have an [ArcGIS API key](https://github.com/quark1482/kcs/edit/main/README.md#optional-using-the-arcgis-location-services)...
+2. *[optional]* If you have an [ArcGIS API key](https://github.com/quark1482/kcs#optional-using-the-arcgis-location-services)...
     - `apify secrets:add ArcGIS <your-api-key-value>`
 3. `cd` to any directory where you want to put the actor source code in...
     - `git clone https://github.com/quark1482/kcs`
@@ -48,11 +48,11 @@ Installation
     - `mkdir storage/key_value_stores`
     - `mkdir storage/key_value_stores/default`
     - `cd storage/key_value_stores/default`
-    - Enter a wanted location. Let's say it's 'Boston'. Follow the guidelines [here](https://github.com/quark1482/kcs/edit/main/README.md#running-the-actor-in-the-apify-console).
+    - Enter a wanted location. Let's say it's 'Boston'. Follow the guidelines [here](https://github.com/quark1482/kcs#running-the-actor-in-the-apify-console).
 <br>`echo '{ "location": "Boston, Massachusetts", "radius": 10, "verbose": true }' > INPUT.json`
     - `cd ../../..`
     - `apify run`
-4. The [results](https://github.com/quark1482/kcs/edit/main/README.md#results) will be found in the directory `./storage/datasets/default`.
+4. The [results](https://github.com/quark1482/kcs#results) will be found in the directory `./storage/datasets/default`.
 
 ### *[optional]* Using the ArcGIS location services:
 
@@ -74,7 +74,7 @@ Results
 
 The listing details are returned as an array of JSON objects.
 <br>The Apify console allows you to export them in other formats like CSV, XML, etc.
-<br>If you are running the actor [locally](https://github.com/quark1482/kcs/edit/main/README.md#running-the-actor-locally), one JSON file is created per listing.
+<br>If you are running the actor [locally](https://github.com/quark1482/kcs#running-the-actor-locally), one JSON file is created per listing.
 
 The JSON listing objects have this structure:
 
