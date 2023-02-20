@@ -29,5 +29,9 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
-# Additional configuratioon files
+# Additional configuration files
 *.ini
+
+
+# Anything else
+

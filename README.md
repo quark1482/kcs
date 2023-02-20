@@ -13,7 +13,7 @@ Features
 Installation
 ------------
 
-### Running the actor in the [Apify console](https://console.apify.com/):
+### Running the actor in the [Apify console](https://console.apify.com):
 
 1. Go to Actors, hit 'Create new' and then 'Link Git repository'.
 <br>Use this URL: ` https://github.com/quark1482/kcs `.
@@ -21,32 +21,28 @@ Installation
 3. *[optional]* Give it a Title/Unique name/Description.
 4. Hit 'Build'.
 5. Hit the 'Input' tab and fill out these fields:
-    - Location
-<br>Required. Use the format *city, state*.
-    - Radius
-<br>In miles. **The number of results increases EXPONENTIALLY as the radius increases**.
-<br>Have this into account for a correct usage limits in your subscribed services.
-    - Verbose mode
-<br>Enable it, in case you want to see the progress/status of the actor.
+    | Location | Radius | Verbose mode |
+    | :------: | :----: | :----------: |
+    | Required. Use the format \<*city, state*\> | Distance, in miles | Enable it to view the actor progress as it runs |
+    ><sup>The number of results grows **EXPONENTIALLY** as the radius increases. Have this into account for a correct billing of your subscriptions.</sup>
 6. *[optional]* Hit the 'Code' tab and add an environment variable to store your ArcGIS REST API key:
-    - Name: `ARCGIS_API_KEY`
-    - Value: [Get it here](https://github.com/quark1482/kcs#optional-using-the-arcgis-location-services).
-    - Secret: YES
+    | Name | Value | Secret |
+    | :--: | :---: | :----: |
+    | `ARCGIS_API_KEY` | [Get it here](https://github.com/quark1482/kcs#optional-using-the-arcgis-location-services) | YES |
 7. Hit 'Start'.
 8. The [results](https://github.com/quark1482/kcs#results) will be found in the 'Last run' tab. Once there, hit the 'Dataset' tab.
 
 ### Running the actor locally:
 
-1. Follow the steps to install the Apify CLI [here](https://github.com/apify/apify-cli#readme).
+1. Follow the steps to install the Apify CLI [here](https://docs.apify.com/cli/docs/installation).
+<br>You're good to go right after the command `apify --version` succeeds. 
 2. *[optional]* If you have an [ArcGIS API key](https://github.com/quark1482/kcs#optional-using-the-arcgis-location-services)...
     - `apify secrets:add ArcGIS <your-api-key-value>`
 3. `cd` to any directory where you want to put the actor source code in...
     - `git clone https://github.com/quark1482/kcs`
     - `cd kcs`
     - `npm install`
-    - `mkdir storage`
-    - `mkdir storage/key_value_stores`
-    - `mkdir storage/key_value_stores/default`
+    - `apify init`
     - `cd storage/key_value_stores/default`
     - Enter a wanted location. Let's say it's 'Boston'. Follow the guidelines [here](https://github.com/quark1482/kcs#running-the-actor-in-the-apify-console).
 <br>`echo '{ "location": "Boston, Massachusetts", "radius": 10, "verbose": true }' > INPUT.json`
@@ -56,7 +52,7 @@ Installation
 
 ### *[optional]* Using the ArcGIS location services:
 
-1. Create a [ArcGIS developer](https://developers.arcgis.com/) account.
+1. Create a [ArcGIS developer](https://developers.arcgis.com) account.
 2. Go to the Dashboard and create a new API key (or use the default one).
 3. Hit 'Edit API Key' and then 'Set service scopes'.
 4. Check 'Geocoding (not stored)' and disable the others if you wish, and hit 'Apply 1 scope'. 
@@ -78,7 +74,7 @@ The listing details are returned as an array of JSON objects.
 
 The JSON listing objects have this structure:
 
-```
+```json
 {
     "id": "<flipkey.com internal listing id>",
     "name": "<listing short name>",
@@ -145,7 +141,7 @@ Dependencies
 <br>For striping HTML content from unwanted elements.
 <br>`npm i sanitize-html`
 
-* [ArcGIS REST JS](https://esri.github.io/arcgis-rest-js/guides/node/)
+* [ArcGIS REST JS](https://esri.github.io/arcgis-rest-js/guides/node)
 <br>For reverse-geocoding requests to the ArcGIS REST API.
 <br>`npm i @esri/arcgis-rest-auth@"<4" @esri/arcgis-rest-geocoding@"<4" @esri/arcgis-rest-request@"<4"`
 <br>_As you may have noticed, there is an issue with the newest ArcGIS modules. Hence the version lock._
