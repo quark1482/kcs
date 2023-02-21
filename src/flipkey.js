@@ -1,3 +1,21 @@
+/*
+ * Part of the KeyChain scraper project.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
 import { Actor, log, LogLevel } from 'apify';
 
 import { setDefaultRequestOptions } from '@esri/arcgis-rest-request';
@@ -145,6 +163,18 @@ Actor.main(
     }
 );
 
+/**
+ * @brief Sends a reverse-geocoding request to the ArcGIS API.
+ *
+ * @param {number} lat  latitude coordinate.
+ * @param {number} lng  longitude coordinate.
+ * @param {object} key  ArcGIS API key.
+ *
+ * @return {Object}  results.
+ * @return {boolean} results.status   true if operation was successful.
+ * @return {string}  results.message  error text if operation failed.
+ * @return {string}  results.address  resulting address, if there is one.
+ */
 async function getAddressFromLatLng(lat, lng, key) {
     let ret = {
         status: false,
@@ -190,12 +220,21 @@ async function getAddressFromLatLng(lat, lng, key) {
     return ret;
 }
 
-function getCityAndState(d) {
+/**
+ * @brief Gets the formatted city and state components from a supplied location text.
+ *
+ * @param {string} l  location text in the form "<city>, <state>".
+ *
+ * @return {Object} results.
+ * @return {string} results.city   the city component.
+ * @return {string} results.state  the state component.
+ */
+function getCityAndState(l) {
     let ret = {
         city: '',
         state: ''
     };
-    let a = d.split(',', 2);
+    let a = l.split(',', 2);
     a.forEach(
         function(v, i) {
             a[i] = v.trim();
@@ -209,6 +248,16 @@ function getCityAndState(d) {
     return ret;
 }
 
+/**
+ * @brief Gets the distance (in miles) between two points given their coordinates.
+ *
+ * @param {number} lat1  latitude coordinate for point #1
+ * @param {number} lng1  longitude coordinate for point #1
+ * @param {number} lat2  latitude coordinate for point #2
+ * @param {number} lng2  longitude coordinate for point #2
+ *
+ * @return {number}  calculated distance.
+ */
 function getDistance(lat1, lng1, lat2, lng2) {
     function getRad(deg) {
         return deg * Math.PI / 180;
@@ -223,6 +272,15 @@ function getDistance(lat1, lng1, lat2, lng2) {
     return earthRadius * c;
 }
 
+/**
+ * @brief Gets the HTTP(S) resource pointed by the supplied URL.
+ *
+ * @note The requests ARE NOT proxified when the actor runs locally.
+ *
+ * @param {string} url  URL of the resource.
+ *
+ * @return {Promise}  response object for the requested resource.
+ */
 async function getHTTPResponse(url) {
     let config = {};
     if (Object.hasOwn(process.env, 'APIFY_IS_AT_HOME')) {
@@ -235,6 +293,19 @@ async function getHTTPResponse(url) {
     return fetch(url, config);
 }
 
+/**
+ * @brief Gets extra details (description, amenities, photos and host name) for a given listing.
+ *
+ * @param {string} url  URL of the listing.
+ *
+ * @return {Object}  results.
+ * @return {boolean} results.status       true if operation was successful.
+ * @return {string}  results.message      error text if operation failed.
+ * @return {string}  results.description  property description (in simplified HTML).
+ * @return {Array}   results.amenities    array of property amenities.
+ * @return {Array}   results.photos       array of property photo URLs.
+ * @return {string}  retults.host         property host name.
+ */
 async function getListingDetails(url) {
     let ret = {
         status: false,
@@ -334,6 +405,17 @@ async function getListingDetails(url) {
     return ret;
 }
 
+/**
+ * @brief Gets all the listings (homes, rooms, etc.) available for the supplied location.
+ *
+ * @param {string} path  API root resource path to get the listings from.
+ * @param {Object} key   ArcGIS API key. Pass an empty object to disable geolocation.
+ *
+ * @return {Object}  results.
+ * @return {boolean} results.status    true if operation was successful.
+ * @return {string}  results.message   error text if operation failed.
+ * @return {Array}   results.listings  array of listing objects found for the supplied location.
+ */
 async function getLocationListings(path, key) {
     let ret = {
         status: false,
@@ -431,6 +513,24 @@ async function getLocationListings(path, key) {
     return ret;
 }
 
+/**
+ * @brief Finds the most accurate city/state suggestion for the supplied location text.
+ *
+ * @param {string} l        location text in the form "<city>, <state>".
+ * @param {number} [lat=0]  preset latitude coordinate to be returned.
+ * @param {number} [lng=0]  preset longitude coordinate to be returned.
+ *
+ * @return {Object}  results.
+ * @return {boolean} results.status   true if operation was successful.
+ * @return {string}  results.message  error text if operation failed.
+ * @return {string}  results.src      a copy of the original query
+ * @return {string}  results.name     API returned location name in the form "<city>, <state>, <country>".
+ * @return {string}  results.city     API returned city name.
+ * @return {string}  results.state    API returned state code.
+ * @return {number}  results.lat      a copy of the supplied latitude coordinate.
+ * @return {number}  results.lng      a copy of the supplied longitude coordinate.
+ * @return {string}  results.path     API returned root resource path to all the city listings.
+ */
 async function getLocationSuggestion(l, lat = 0, lng = 0) {
     let ret = {
         status: false,
@@ -489,6 +589,16 @@ async function getLocationSuggestion(l, lat = 0, lng = 0) {
     return ret;
 }
 
+/**
+ * @brief Downloads the US Cities JSON "database".
+ *
+ * @note Actual data is at https://www.npoint.io/docs/e53b0fd5a237603e0f09
+ *
+ * @return {Object}  results.
+ * @return {boolean} results.status    true if operation was successful.
+ * @return {string}  results.message   error text if operation failed.
+ * @return {Array}   results.uscities  array of city objects.
+ */
 async function loadUSCities() {
     let ret = {
         status: false,
@@ -519,6 +629,18 @@ async function loadUSCities() {
     return ret;
 }
 
+/**
+ * @brief Searches for a given city/state pair in the US Cities JSON "database".
+ *
+ * @param {Array}  db     array of city objects.
+ * @param {string} city   city name to search for.
+ * @param {string} state  state name/code to search for.
+ *
+ * @return {Object} results.
+ * @return {number} results.id   city identifier or zero if not found.
+ * @return {number} results.lat  latitude coordinate of the city or zero if not found.
+ * @return {number} results.lng  longitude coordinate of the city or zero if not found.
+ */
 function queryCity(db, city, state) {
     let ret = {
         id: 0,
@@ -541,6 +663,17 @@ function queryCity(db, city, state) {
     return ret;
 }
 
+/**
+ * @brief Gets the API location ids (and other details) for each available city within a given radius.
+ *
+ * @param {Array}  db      array of city objects.
+ * @param {number} id      city identifier of the starting city.
+ * @param {number} lat     latitude coordinate of the starting point.
+ * @param {number} lng     longitude coordinate of the starting point.
+ * @param {number} radius  the maxium radius to search from the starting point, in miles.
+ *
+ * @return {Array}  array of location details objects for every city found.
+ */
 function queryNearbyCities(db, id, lat, lng, radius) {
     let ret = [];
     for (const c of db) {
